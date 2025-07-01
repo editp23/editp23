@@ -1,0 +1,24 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+
+# SLURM logs or files
+slurm/
+*.slurm
+
+# VSCode settings
+.vscode/
+
+# Environment files
+.env
+*.env
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Mac and OS metadata
+.DS_Store
+
+# Python virtual environments
+venv/
+.env/
