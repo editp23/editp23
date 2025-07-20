@@ -1,3 +1,4 @@
+# This script is borrowed from https://github.com/allenai/objaverse-rendering
 import argparse
 import math
 import os

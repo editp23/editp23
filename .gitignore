@@ -2,6 +2,8 @@
 __pycache__/
 *.py[cod]
 
+# Temporal
+tmp/
 # SLURM logs or files
 slurm/
 *.slurm

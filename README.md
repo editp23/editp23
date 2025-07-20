@@ -14,7 +14,7 @@ This project was tested on a Linux system with Python 3.11 and CUDA 12.6.
 
 **1. Clone the Repository**
 ```bash
-git clone https://github.com/editp23/EditP23.git
+git clone --recurse-submodules https://github.com/editp23/EditP23.git
 cd EditP23
 ```
 
@@ -133,7 +133,7 @@ These helper scripts create the three PNG files every experiment needs:
 |---------------|-----------------------------------------------------------------|
 | `src.png`     | Original single view (the one you will edit).                   |
 | `edited.png`  | Your 2D edit of `src.png`.                                      |
-| `src_mv.png`  | 6-view grid of the unedited object (used for propagation).      |
+| `src_mv.png`  | 6-view grid of the original object.      |
 
 ### 1. Generate `src.png` and `src_mv.png`
 **EditP23** needs a **source view** (`src.png`) and a **multi-view grid** (`src_mv.png`).  
@@ -175,4 +175,46 @@ For quick edits, you can use readily available online tools, such as the followi
 
 
 ## Reconstruction
-Coming soon.
+After generating an edited multi-view image (`edited_mv.png`) with our main script, you can reconstruct it into a 3D model. We provide a helper script that uses the [InstantMesh](https://github.com/TencentARC/InstantMesh) framework to produce a textured `.obj` file and a turntable video.
+
+
+### Additional Dependencies
+First, you'll need to install several libraries required for the reconstruction process.
+
+<details>
+<summary>Click to expand installation instructions</summary>
+
+```bash
+# Install general dependencies
+pip install opencv-python einops xatlas imageio[ffmpeg]
+
+# Install NVIDIA's nvdiffrast library
+pip install git+https://github.com/NVlabs/nvdiffrast/
+
+# For video export, ensure ffmpeg is installed
+# On conda, you can run:
+conda install ffmpeg
+```
+</details>
+
+### Running the Reconstruction
+The reconstruction script takes the multi-view PNG as input and generates the 3D assets. The necessary model config file (instant-mesh-large.yaml) is included in the configs/ directory of the InstanMesh repository.
+#### Example Command
+````bash
+python scripts/recon.py \
+  external/instant-mesh/configs/instant-mesh-large.yaml \
+  --input_file "examples/robot_sunglasses/output/edited_mv.png" \
+  --output_dir "examples/robot_sunglasses/output/recon/"
+  ````
+
+### Command-Line Arguments
+Here are the arguments for the recon.py script:
+
+| Argument      | Description                                                        | Default      |
+| :------------ | :----------------------------------------------------------------- | :----------- |
+| `config`      | **(Required)** Path to the InstantMesh model config file.          |              |
+| `--input_file`| **(Required)** Path to the multi-view PNG file you want to reconstruct. |              |
+| `--output_dir`| Directory where the output `.obj` and `.mp4` files will be saved.  | `"outputs/"` |
+| `--scale`     | Scale of the input cameras.                                        | `1.0`        |
+| `--distance`  | Camera distance for rendering the output video.                    | `4.5`        |
+| `--no_video`  | A flag to disable saving the `.mp4` video.                         | `False`      |
