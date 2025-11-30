@@ -1,11 +1,12 @@
 # EditP23: 3D Editing via Propagation of Image Prompts to Multi-View
 
-[![Project Page](https://img.shields.io/badge/Project-Page-blue)](https://editp23.github.io/)
-[![arXiv](https://img.shields.io/badge/arXiv-2506.20652-b31b1b.svg)](https://arxiv.org/abs/2506.20652)
+[![Project Page](https://img.shields.io/badge/Project%20Page-Website-blue?logo=googlechrome&logoColor=white)](https://editp23.github.io/)
+[![arXiv](https://img.shields.io/badge/arXiv-2506.20652-B31B1B?logo=arxiv&logoColor=white)](https://arxiv.org/abs/2506.20652)
+[![Demo](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-yellow)](https://huggingface.co/spaces/roi/EditP23)
 
 This repository contains the official implementation for **EditP23**, a method for fast, mask-free 3D editing that propagates 2D image edits to multi-view representations in a 3D-consistent manner.
 The edit is guided by an image pair, allowing users to leverage any preferred 2D editing tool, from manual painting to generative pipelines.
-
+![Reconstruction Comparison](resources/comparison_recon.gif)
 ### Installation
 <details>
 <summary>Click to expand installation instructions</summary>
@@ -117,10 +118,45 @@ EditP23/
 │   ├── main.py
 │   ├── pipeline.py
 │   └── utils.py
+├── dataset.tar.gz
 ├── .gitignore
 └── README.md
 ```
+# Dataset
 
+We provide a test dataset of multi-view edits and prompts.
+
+## Setup
+
+1. Download the dataset archive `dataset.tar.gz`.
+2. Extract it into the repository root:
+
+```bash
+tar -xzvf dataset.tar.gz
+```
+
+## Structure
+The dataset is organized hierarchically by object and edit ID.
+```text
+dataset/
+├── summary.json       # Master index containing prompts and configs for each edit
+├── green_dragon/      # Object
+│   ├── src.glb        # Source 3D object
+│   └── 1/             # Edit ID
+│       ├── src.png    # Original View
+│       ├── edited.png # Target Edit
+│       ├── src_mv.png # Source Multi-View Grid
+│       ├── ours.png   # Edited Multi-View Grid
+│       └── ours.obj   # Edited 3D Object (After Reconstruction)
+├── man/
+│   └── ...
+└── ...
+```
+
+### Metadata
+The `summary.json` file maps every example to its prompt and editing parameters.
+- Key 1: Object Name (e.g., green_dragon)
+- Key 2: Edit ID (e.g., 1)
 # Utilities
 
 ## Setup
